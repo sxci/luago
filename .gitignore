@@ -1,0 +1,13 @@
+
+bin
+pkg
+vendor
+gin-bin
+
+
+.vscode
+
+.idea
+
+# Mac OSX
+.DS_Store
