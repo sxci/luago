@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"strconv"
 
 	"github.com/sxci/luago/go/binchunk"
 )
@@ -51,7 +50,7 @@ func printCode(f *binchunk.Prototype) {
 	for pc, c := range f.Code {
 		line := "-"
 		if len(f.LineInfo) > 0 {
-			line = strconv.FormatUint(uint64(f.LineInfo[pc]), 10)
+			line = fmt.Sprintf("%d", f.LineInfo[pc])
 		}
 		fmt.Printf("\t%d\t[%s]\t0x%08X\n", pc+1, line, c)
 	}
