@@ -4,6 +4,9 @@ pkg
 vendor
 gin-bin
 
+*.out
+*.luac
+
 
 .vscode
 
