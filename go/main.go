@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strconv"
 
 	"github.com/sxci/luago/go/binchunk"
+	"github.com/sxci/luago/go/vm"
 )
 
 func main() {
@@ -52,8 +54,49 @@ func printCode(f *binchunk.Prototype) {
 		if len(f.LineInfo) > 0 {
 			line = fmt.Sprintf("%d", f.LineInfo[pc])
 		}
-		fmt.Printf("\t%d\t[%s]\t0x%08X\n", pc+1, line, c)
+		i := vm.Instruction(c)
+		fmt.Printf("\t%d\t[%s]\t%s \t", pc+1, line, i.OpName())
+		printOperands(i)
+		fmt.Printf("\n")
 	}
+}
+
+func printOperands(i vm.Instruction) {
+	str := ""
+	switch i.OpMode() {
+	case vm.IABC:
+		a, b, c := i.ABC()
+		pb, pc := "", ""
+		if i.BMode() != vm.OpArgN {
+			if b > 0xFF {
+				pb = strconv.Itoa(-1 - (b & 0xFF))
+			} else {
+				pb = strconv.Itoa(b)
+			}
+		}
+		if i.CMode() != vm.OpArgN {
+			if c > 0xFF {
+				pc = strconv.Itoa(-1 - (c & 0xFF))
+			} else {
+				pc = strconv.Itoa(c)
+			}
+		}
+		str = fmt.Sprintf("%d %2s %2s", a, pb, pc)
+	case vm.IABx:
+		a, bx := i.ABx()
+		pbx := bx
+		if i.BMode() == vm.OpArgK {
+			pbx = -1 - bx
+		}
+		str = fmt.Sprintf("%d %2d", a, pbx)
+	case vm.IAsBx:
+		a, sbx := i.AsBx()
+		str = fmt.Sprintf("%d %2d", a, sbx)
+	case vm.IAx:
+		ax := i.Ax()
+		str = fmt.Sprintf("%d", ax)
+	}
+	fmt.Printf("%-8s", str)
 }
 
 func printDetail(f *binchunk.Prototype) {
