@@ -87,7 +87,7 @@ type opcode struct {
 	name     string
 }
 
-var opcodes = []opcode{
+var opcodes = [...]opcode{
 	/*     T  A    B       C     mode         name    */
 	opcode{0, 1, OpArgR, OpArgN, IABC /* */, "MOVE    "}, // R(A) := R(B)
 	opcode{0, 1, OpArgK, OpArgN, IABx /* */, "LOADK   "}, // R(A) := Kst(Bx)
