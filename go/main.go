@@ -13,10 +13,30 @@ import (
 )
 
 func main() {
-	main_show_stack()
+	mainCalcState()
 }
 
-func main_show_stack() {
+func mainCalcState() {
+	ls := state.New()
+	ls.PushInteger(1)
+	ls.PushString("2.0")
+	ls.PushString("3.0")
+	ls.PushNumber(4.0)
+	printStack(ls)
+
+	ls.Arith(api.LUA_OPADD)
+	printStack(ls)
+	ls.Arith(api.LUA_OPBNOT)
+	printStack(ls)
+	ls.Len(2)
+	printStack(ls)
+	ls.Concat(3)
+	printStack(ls)
+	ls.PushBoolean(ls.Compare(1, 2, api.LUA_OPEQ))
+	printStack(ls)
+}
+
+func mainShowStack() {
 	ls := state.New()
 	ls.PushBoolean(true)
 	printStack(ls)
@@ -56,7 +76,7 @@ func printStack(ls api.LuaState) {
 	fmt.Println()
 }
 
-func main_print_lua_chunk() {
+func mainPrintLuaChunk() {
 	if len(os.Args) <= 1 {
 		return
 	}
