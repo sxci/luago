@@ -2,9 +2,9 @@ package state
 
 import "github.com/sxci/luago/go/api"
 
-func (self *luaState) Compare(idx1, idx2 int, op api.CompareOp) bool {
-	a := self.stack.get(idx1)
-	b := self.stack.get(idx2)
+func (ls *luaState) Compare(idx1, idx2 int, op api.CompareOp) bool {
+	a := ls.stack.get(idx1)
+	b := ls.stack.get(idx2)
 	switch op {
 	case api.LUA_OPEQ:
 		return _eq(a, b)
