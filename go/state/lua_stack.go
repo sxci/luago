@@ -5,7 +5,7 @@ type luaStack struct {
 	top   int
 }
 
-func newLuaStack(size uint) *luaStack {
+func newLuaStack(size int) *luaStack {
 	return &luaStack{
 		slots: make([]luaValue, size),
 		top:   0,

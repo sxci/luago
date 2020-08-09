@@ -13,11 +13,40 @@ import (
 )
 
 func main() {
-	mainCalcState()
+	mainExecCode1()
+}
+
+func mainExecCode1() {
+	if len(os.Args) <= 1 {
+		return
+	}
+	data, err := ioutil.ReadFile(os.Args[1])
+	if err != nil {
+		panic(err)
+	}
+	proto := binchunk.Undump(data)
+	luaMain1(proto)
+}
+
+func luaMain1(proto *binchunk.Prototype) {
+	nRegs := int(proto.MaxStacksize)
+	ls := state.New(nRegs+8, proto)
+	ls.SetTop(nRegs)
+	for {
+		pc := ls.PC()
+		inst := vm.Instruction(ls.Fetch())
+		if inst.Opcode() != vm.OP_RETURN {
+			inst.Execute(ls)
+			fmt.Printf("[%02d] %s ", pc+1, inst.OpName())
+			printStack(ls)
+		} else {
+			break
+		}
+	}
 }
 
 func mainCalcState() {
-	ls := state.New()
+	ls := state.New(20, nil)
 	ls.PushInteger(1)
 	ls.PushString("2.0")
 	ls.PushString("3.0")
@@ -37,7 +66,7 @@ func mainCalcState() {
 }
 
 func mainShowStack() {
-	ls := state.New()
+	ls := state.New(20, nil)
 	ls.PushBoolean(true)
 	printStack(ls)
 	ls.PushInteger(10)

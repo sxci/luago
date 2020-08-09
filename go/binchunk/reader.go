@@ -90,7 +90,7 @@ func (r *reader) readProto(parentSource string) *Prototype {
 	if source == "" {
 		source = parentSource
 	}
-	// 能够保证从上到下的执行顺序 ??
+	// 能够保证从上到下的执行顺序 ?? 可以的。
 	return &Prototype{
 		Source:          source,
 		LineDefined:     r.readUint32(),
